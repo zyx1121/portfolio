@@ -24,10 +24,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head />
       <body className={cn("min-h-screen bg-background font-sans antialiased", fontSans.variable)}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <header className="sticky top-0 flex h-16 w-[100dvw] bg-transparent px-8 font-mono">
+          <header className="z-50 sticky top-0 flex h-16 w-[100dvw] dark:bg-[#00000080] bg-[#ffffff80] px-4 font-mono backdrop-blur-sm">
             <Label className="my-auto" >
               <Link href="/">
-                localhost:3000
+                (localhost:3000)
               </Link>
             </Label>
             <Badge className="my-auto ml-2 " variant="secondary">

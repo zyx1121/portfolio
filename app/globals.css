@@ -24,7 +24,7 @@
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 5.9% 10%;
-    --radius: 1rem;
+    --radius: 0.75rem;
   }
 
   .dark {
@@ -52,42 +52,45 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border box-border scroll-smooth;
   }
   body {
     @apply bg-background text-foreground;
   }
-  h1 {
+  article h1 {
     @apply scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl;
   }
-  h2 {
+  article h2 {
     @apply scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0 mt-10;
   }
-  h3 {
+  article h3 {
     @apply scroll-m-20 text-2xl font-semibold tracking-tight;
   }
-  h4 {
+  article h4 {
     @apply scroll-m-20 text-xl font-semibold tracking-tight;
   }
-  p {
+  article p {
     @apply leading-7 [&:not(:first-child)]:mt-6;
   }
-  blockquote {
+  article blockquote {
     @apply mt-6 border-l-2 pl-6 italic;
   }
-  .table {
+  article table {
     @apply w-full;
   }
-  .tr {
+  article tr {
     @apply m-0 border-t p-0 even:bg-muted;
   }
-  .th {
+  article th {
     @apply border px-4 py-2 text-left [&[align=center]]:text-center [&[align=right]]:text-right;
   }
-  .ul {
+  article ul {
     @apply my-6 ml-6 list-disc [&>li]:mt-2;
   }
-  code {
-    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+  article code {
+    @apply block overflow-scroll mt-6 relative rounded-lg bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+  }
+  article a {
+    @apply bg-muted text-muted-foreground rounded p-1;
   }
 }
