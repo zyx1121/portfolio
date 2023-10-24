@@ -1,12 +1,12 @@
-import { getPostData } from "@/lib/getPostData";
+import { getPost } from "@/lib/getPost";
 
 export default async function Home() {
-  const content = await getPostData();
+  const post = await getPost("loki");
 
   return (
-    <main className="relative h-auto w-[100dvw] p-4">
+    <main className="relative w-[100dvw] p-4">
       <article className="relative font-mono max-w-4xl mx-auto">
-        <div dangerouslySetInnerHTML={{ __html: content }} />
+        {/* <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} /> */}
       </article>
     </main>
   )
