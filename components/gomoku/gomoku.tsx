@@ -1,46 +1,28 @@
 'use client'
 
 import { Label } from "@/components/ui/label"
-import { useLocalParticipant, useRoomContext } from "@livekit/components-react"
+import { useLocalParticipant, useParticipants, useRoomContext } from "@livekit/components-react"
 import { DataPacket_Kind, RemoteParticipant, RoomEvent } from "livekit-client"
-import { Room } from "livekit-server-sdk"
 import { useCallback, useEffect, useRef, useState } from "react"
 
 export default function Gomoku({ name }: { name: string }) {
   const array15 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14]
   const array16 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
 
+  const participants = useParticipants()
   const localParticipant = useLocalParticipant().localParticipant
   const roomContext = useRoomContext()
 
-  const [room, setRoom] = useState<Room>()
   const [test, setTest] = useState<number[]>(Array(15 * 15).fill(0))
 
+  const preTest = useRef<number[]>(test)
   const sendTestLock = useRef(false)
-  const canSetStone = useRef<boolean>(name === "test" ? true : false)
   const textEncoder = useRef(new TextEncoder())
   const textDecoder = useRef(new TextDecoder())
 
-  const getRooms = async () => {
-    try {
-      const resp = await fetch(`/api/room?name=test`, { method: 'GET' })
-      const data = await resp.json()
-      setRoom(data.room)
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
-  useEffect(() => {
-    getRooms()
-  }, [])
-
-  useEffect(() => {
-    let id = setInterval(() => {
-      getRooms()
-    }, 3000)
-    return () => clearInterval(id)
-  }, [])
+  const numStones = test.filter((stone) => stone !== 0).length
+  const numStonesIsEven = numStones % 2 === 0
+  const canSetStone = (numStonesIsEven && name === "test") || (!numStonesIsEven && name !== "test") ? true : false
 
   const onDataChannel = useCallback(
     (payload: Uint8Array, participant: RemoteParticipant | undefined) => {
@@ -49,7 +31,6 @@ export default function Gomoku({ name }: { name: string }) {
       if (data.channelId === "test") {
         console.log("test received", data.payload)
         sendTestLock.current = true
-        canSetStone.current = true
         setTestByTest(data.payload)
       }
     }, []
@@ -85,32 +66,108 @@ export default function Gomoku({ name }: { name: string }) {
 
   useEffect(() => {
     console.log("test change", test)
-    if (room?.numParticipants === 2) sendTest()
+    // if (participants.length < 2) setTest(Array(15 * 15).fill(0))
+    if (participants.length === 2) sendTest()
     sendTestLock.current = false
   }, [test])
 
   useEffect(() => {
-    console.log("onDataChannel");
+    // sendTest()
+  })
+
+  useEffect(() => {
     roomContext.on(RoomEvent.DataReceived, onDataChannel)
     return () => {
       roomContext.off(RoomEvent.DataReceived, onDataChannel)
-    };
-  }, [onDataChannel, roomContext]);
+    }
+  }, [onDataChannel, roomContext])
+
+  // check win
+  useEffect(() => {
+    if (test === preTest.current) return;
+    const position = test.findIndex((stone, index) => stone !== preTest.current[index])
+    console.log("test check", position)
+    preTest.current = test
+
+    for (let angle = 0; angle < 4; angle++) {
+      let count = 1
+      let row = Math.floor(position / 15)
+      let col = position % 15
+      while (true) {
+        switch (angle) {
+          case 0:
+            row--
+            break;
+          case 1:
+            row--
+            col++
+            break;
+          case 2:
+            col++
+            break;
+          case 3:
+            col++
+            row++
+            break;
+        }
+        if (row < 0 || row > 14 || col < 0 || col > 14) break;
+        if (test[row * 15 + col] !== test[position]) break;
+        count++
+      }
+      row = Math.floor(position / 15)
+      col = position % 15
+      while (true) {
+        switch (angle) {
+          case 0:
+            row++
+            break;
+          case 1:
+            row++
+            col--
+            break;
+          case 2:
+            col--
+            break;
+          case 3:
+            col--
+            row--
+            break;
+        }
+        if (row < 0 || row > 14 || col < 0 || col > 14) break;
+        if (test[row * 15 + col] !== test[position]) break;
+        count++
+      }
+      if (count >= 5) {
+        console.log("test win", test[position])
+        setTest(Array(15 * 15).fill(0))
+        break;
+      }
+    }
+
+  }, [test])
 
   return (
-    <main className="w-[100dvw] p-4">
-      <div className="grid font-mono">
+    <main className="w-[100dvw] h-[calc(100dvh-8rem)] p-4 flex items-center justify-center select-none">
+      {participants.length < 2 &&
+      <div className="fixed z-10 w-[100dvw] h-[calc(100dvh-8rem)] backdrop-blur-sm flex items-center justify-center">
+        waiting for opponent...
+      </div>
+      }
+      <div className="fixed z-50 top-20 left-8 grid gap-2 border rounded-lg p-4">
         <Label>
-          room : {room?.name}
+          numParticipants : {participants.length}
         </Label>
         <Label>
-          numParticipants : {room?.numParticipants}
+          player : {name}
         </Label>
         <Label>
-          name : {name}
+          canSetStone : {canSetStone.toString()}
         </Label>
         <Label>
-          canSetStone : {canSetStone.current.toString()}
+          numStones : {numStones}
+        </Label>
+        <Label>
+          numStonesIsEven : {(numStones % 2 === 0).toString()}
         </Label>
       </div>
       <table className="absolute table-fixed">
@@ -137,10 +194,9 @@ export default function Gomoku({ name }: { name: string }) {
                   const position = row * 15 + col;
                   switch (test[position]) {
                     case 0:
-                      if (canSetStone.current) return (
+                      if (canSetStone) return (
                         <td key={col} className="h-8 w-8">
                           <div className="w-7 h-7 m-auto rounded-full hover:border" onClick={() => {
-                            canSetStone.current = false;
                             setTestByPosition(position);
                           }} />
                         </td>

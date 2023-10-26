@@ -17,9 +17,9 @@ export default function Page() {
   }
 
   return (
-    <main className="w-[20rem] p-4">
-      <form className="flex gap-4" onSubmit={handleSubmit} >
-        <Input ref={inputRef} type="text" placeholder="name" />
+    <main className="w-[100dvw] h-[calc(100dvh-8rem)] p-4 flex items-center justify-center">
+      <form className="grid gap-4" onSubmit={handleSubmit} >
+        <Input className="text-center" ref={inputRef} type="text" placeholder="name" />
         <Button type="submit">
           start
         </Button>

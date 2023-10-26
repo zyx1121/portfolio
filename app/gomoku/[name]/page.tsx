@@ -29,11 +29,10 @@ export default function Page() {
   }
 
   return (
-    <LiveKitRoom
+      <LiveKitRoom
       token={token}
       connectOptions={{ autoSubscribe: false }}
       serverUrl={process.env.NEXT_PUBLIC_LIVEKIT_URL}
-      data-lk-theme="none"
     >
       <Gomoku name={name} />
     </LiveKitRoom>
