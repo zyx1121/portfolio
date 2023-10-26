@@ -5,7 +5,7 @@ export default async function Home() {
 
   return (
     <main className="relative w-[100dvw] p-4 mt-8">
-      <article className="relative font-mono max-w-4xl mx-auto">
+      <article className="relative max-w-4xl mx-auto">
         <div dangerouslySetInnerHTML={{ __html: post.contentHtml }} />
       </article>
     </main>

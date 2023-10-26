@@ -2,7 +2,7 @@ import { Breadcrumbs } from '@/components/header/breadcrumbs'
 import { ThemeToggle } from '@/components/header/theme'
 import { ThemeProvider } from '@/components/providers/theme'
 import { Button } from '@/components/ui/button'
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuShortcut, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Label } from '@/components/ui/label'
 import { cn } from '@/lib/utils'
 import { ChevronsUpDown } from 'lucide-react'
@@ -28,9 +28,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head />
       <body className={cn("h-[100dvh] bg-background font-mono antialiased", fontSans.variable)}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <header className="z-50 sticky top-0 flex h-16 w-[100dvw] dark:bg-[#00000080] bg-[#ffffff80] px-4 font-mono backdrop-blur-sm">
-            <Label className="my-auto mx-2 text-base" >
-              <Link href="/">
+          <header className="z-50 sticky top-0 flex h-16 w-[100dvw] dark:bg-[#00000080] bg-[#ffffff80] px-4 font-mono backdrop-blur-sm text-base">
+            <Label className="my-auto mx-1 " asChild>
+            <Link href="/">
                 ~
               </Link>
             </Label>
@@ -45,11 +45,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" >
-                <DropdownMenuItem asChild>
-                  <Link href="/gomoku">
+                <Link href="/gomoku">
+                  <DropdownMenuItem>
                     gomoku
-                  </Link>
-                </DropdownMenuItem>
+                    <DropdownMenuShortcut>♟️</DropdownMenuShortcut>
+                  </DropdownMenuItem>
+                </Link>
               </DropdownMenuContent>
             </DropdownMenu>
             <ThemeToggle />
