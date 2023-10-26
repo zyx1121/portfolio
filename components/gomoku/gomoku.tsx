@@ -1,6 +1,5 @@
 'use client'
 
-import { Label } from "@/components/ui/label"
 import { useLocalParticipant, useParticipants, useRoomContext } from "@livekit/components-react"
 import { DataPacket_Kind, RemoteParticipant, RoomEvent } from "livekit-client"
 import { useCallback, useEffect, useRef, useState } from "react"
@@ -153,7 +152,7 @@ export default function Gomoku({ name }: { name: string }) {
         waiting for opponent...
       </div>
       }
-      <div className="fixed z-50 top-20 left-8 grid gap-2 border rounded-lg p-4">
+      {/* <div className="fixed z-50 top-20 left-8 grid gap-2 border rounded-lg p-4">
         <Label>
           numParticipants : {participants.length}
         </Label>
@@ -169,7 +168,7 @@ export default function Gomoku({ name }: { name: string }) {
         <Label>
           numStonesIsEven : {(numStones % 2 === 0).toString()}
         </Label>
-      </div>
+      </div> */}
       <table className="absolute table-fixed">
         <tbody>
           {array16.map((index) => {
