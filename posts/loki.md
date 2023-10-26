@@ -21,5 +21,10 @@
 
 ## Projects
 
-- [NTUST.Live](https://ntust.live) - A live streaming platform
-- [XC6SLX75T.project.v2.1](https://github.com/zyx1121/xc6slx75t.project.v2.1) - Lunar magnetic field detector
+- 2023
+  - [NTUST.Live](https://ntust.live) - Live streaming platform
+  - [XC6SLX75T.project.v2.1](https://github.com/zyx1121/xc6slx75t.project.v2.1) - Lunar magnetic field detector
+- 2021
+  - [ESP32.Display](https://github.com/zyx1121/esp32.display) - Text display on ESP32 with 4 16x16 LED matrix
+- 2020
+  - [ESP32.Gomoku](https://github.com/zyx1121/esp32.gomoku) - Gomoku game on ESP32 with 4 8x8 dual color LED matrix
